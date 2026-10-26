@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday!</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #170b38, #5d1b73, #f05b91);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #confetti {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .card {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 560px;
+      padding: 35px 24px;
+      border: 1px solid #ffffff50;
+      border-radius: 28px;
+      background: #ffffff18;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 15px 50px #00000035;
+      animation: appear 1s ease-out;
+    }
+
+    .cake {
+      font-size: clamp(65px, 15vw, 100px);
+      animation: bounce 2s infinite;
+    }
+
+    h1 {
+      font-size: clamp(32px, 8vw, 52px);
+      line-height: 1.2;
+      margin: 15px 0;
+      color: #ffe66d;
+      text-shadow: 0 0 20px #ff78c4;
+      animation: glow 2s infinite alternate;
+    }
+
+    h2 {
+      font-size: clamp(20px, 5vw, 28px);
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: clamp(15px, 4vw, 18px);
+      line-height: 1.7;
+      margin-bottom: 22px;
+    }
+
+    .balloons {
+      font-size: clamp(25px, 7vw, 38px);
+      margin: 18px 0;
+      letter-spacing: 6px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    button {
+      background: linear-gradient(45deg, #ff4f91, #ff9d4d);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 15px 25px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 5px 20px #ff4f9170;
+      transition: transform 0.2s;
+      max-width: 100%;
+    }
+
+    button:hover {
+      transform: scale(1.06);
+    }
+
+    button:focus-visible {
+      outline: 3px solid white;
+      outline-offset: 4px;
+    }
+
+    .footer {
+      margin-top: 24px;
+      font-size: 13px;
+      opacity: 0.85;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ff78c4; }
+      to { text-shadow: 0 0 28px #ffe66d; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+
+    @keyframes appear {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 380px) {
+      .card { padding: 26px 16px; }
+      button { padding: 13px 18px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="confetti"></canvas>
+
+  <main class="card">
+    <div class="cake">🎂</div>
+
+    <h1>Happy Birthday!</h1>
+
+    <h2 id="name">Dear Friend 🎉</h2>
+
+    <p>
+      Wishing you a day filled with love, laughter,
+      happiness and unforgettable memories! 💖
+      <br>
+      May all your dreams come true! ✨
+    </p>
+
+    <div class="balloons">🎈 🎁 🎈</div>
+
+    <button id="celebrate">🎉 Celebrate!</button>
+
+    <div class="footer">
+      Made with ❤️ just for you!
+    </div>
+  </main>
+
+  <script>
+    // Change the name here
+    const birthdayName = "Dear Friend";
+    document.getElementById("name").textContent =
+      birthdayName + " 🎉";
+
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+
+    let pieces = [];
+    let animationId;
+
+    const colors = [
+      "#ff4f91", "#ffe66d", "#64f4ac",
+      "#65d8ff", "#ffffff", "#c99bff"
+    ];
+
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      canvas.style.width = window.innerWidth + "px";
+      canvas.style.height = window.innerHeight + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function celebrate() {
+      // Add a fresh burst of colorful confetti
+      for (let i = 0; i < 160; i++) {
+        pieces.push({
+          x: Math.random() * window.innerWidth,
+          y: -20 - Math.random() * window.innerHeight * 0.4,
+          size: Math.random() * 7 + 3,
+          speed: Math.random() * 3 + 2,
+          drift: (Math.random() - 0.5) * 3,
+          rotation: Math.random() * 360,
+          spin: (Math.random() - 0.5) * 10,
+          color: colors[Math.floor(Math.random() * colors.length)]
+        });
+      }
+
+      if (!animationId) animate();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+      pieces.forEach(piece => {
+        piece.y += piece.speed;
+        piece.x += piece.drift;
+        piece.rotation += piece.spin;
+
+        ctx.save();
+        ctx.translate(piece.x, piece.y);
+        ctx.rotate(piece.rotation * Math.PI / 180);
+        ctx.fillStyle = piece.color;
+        ctx.fillRect(
+          -piece.size / 2,
+          -piece.size / 2,
+          piece.size,
+          piece.size * 0.65
+        );
+        ctx.restore();
+      });
+
+      pieces = pieces.filter(
+        piece => piece.y < window.innerHeight + 30
+      );
+
+      if (pieces.length > 0) {
+        animationId = requestAnimationFrame(animate);
+      } else {
+        animationId = null;
+        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      }
+    }
+
+    document.getElementById("celebrate")
+      .addEventListener("click", celebrate);
+
+    // Start with a birthday confetti shower
+    celebrate();
+  </script>
+</body>
+</html>
